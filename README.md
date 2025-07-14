@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -68,3 +69,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+=======
+# React-Application--Admin-Dashboard
+📊 React Application – Admin Dashboard A responsive and modern Admin Dashboard built with React.js, featuring reusable components, dynamic charts, data tables with pagination, search, and export functionality. Designed for managing user data, analytics, and backend integration with ease.
+>>>>>>> 16f427c835bc4dfdc908415ea7643f7ab2c060de
