@@ -102,16 +102,8 @@ const Login = () => {
     }
     // Get registered user from localStorage
     const regUser = JSON.parse(localStorage.getItem('user'));
-    if (!regUser || regUser.email !== user) {
-      setMessage("Email not registered. Please use 'Forgot password?' to reset.");
-      setShowForgot(true);
-      setForgotEmail(user);
-      return;
-    }
-    if (regUser.password !== password) {
-      setMessage("Incorrect password. Please use 'Forgot password?' to reset.");
-      setShowForgot(true);
-      setForgotEmail(user);
+    if (!regUser || regUser.email !== user || regUser.password !== password) {
+      setMessage("Invalid credentials");
       return;
     }
     setMessage("");
@@ -129,7 +121,6 @@ const Login = () => {
         <div className="login-form-side">
           <h2 className="login-form-title">Login</h2>
           <form onSubmit={handleSubmit} className="login-form">
-            {message && <div className="forgot-message">{message}</div>}
             <div className="login-float-group">
               <input
                 type="text"
@@ -156,6 +147,7 @@ const Login = () => {
               <span tabIndex={0} role="button" onClick={() => setShowForgot(true)}>Forgot password?</span>
             </div>
             <button type="submit" className="login-btn">Sign In</button>
+            {message && <div style={{ color: 'red', marginTop: '8px', textAlign: 'center' }}>{message}</div>}
           </form>
         </div>
         <div className="login-welcome">
