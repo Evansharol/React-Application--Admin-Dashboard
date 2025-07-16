@@ -1,0 +1,84 @@
+/* Smaller UserProfile for Admin Dashboard Header */
+.admin-dashboard-header .user-profile {
+  padding: 4px 12px;
+  border-radius: 18px;
+  box-shadow: none;
+  background: #f7faff;
+  gap: 6px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.admin-dashboard-header .user-avatar {
+  width: 28px;
+  height: 28px;
+  font-size: 1.1rem;
+  margin-bottom: 0;
+  margin-right: 4px;
+}
+.admin-dashboard-header .user-name {
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: #1976d2;
+  margin-top: 0;
+  margin-left: 2px;
+  text-align: left;
+}
+/* Admin Dashboard Header Content Layout */
+.admin-dashboard-header-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.menu-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 2rem;
+  color: #1976d2;
+  padding: 0 12px;
+  transition: color 0.18s;
+}
+.menu-icon:hover {
+  color: #0d47a1;
+}
+
+.admin-dashboard-container {
+  min-height: 100vh;
+  background: linear-gradient(120deg, #f8fafc 0%, #e0c3fc 100%);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.admin-dashboard-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 70px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.07);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 48px;
+  z-index: 100;
+  box-sizing: border-box;
+}
+.admin-dashboard-main {
+  margin-top: 70px;
+  width: 100vw;
+  min-height: calc(100vh - 70px);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 32px 24px;
+  box-sizing: border-box;
+  overflow-x: auto;
+}

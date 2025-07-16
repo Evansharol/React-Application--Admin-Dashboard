@@ -10,7 +10,8 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [showBox, setShowBox] = useState(true);
   const [step, setStep] = useState(1); // 1: form, 2: otp
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]); // 6 digits
+  const otpRefs = [useRef(), useRef(), useRef(), useRef(), useRef(), useRef()];
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
@@ -52,13 +53,18 @@ const Register = () => {
   // Step 2: Verify OTP
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
+    const otpValue = otp.join("");
+    if (otpValue.length !== 6) {
+      setMessage("Please enter the 6-digit OTP.");
+      return;
+    }
     setLoading(true);
     setMessage("");
     try {
       const res = await fetch('http://localhost:3001/api/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, otp, newPassword: password })
+        body: JSON.stringify({ email, otp: otpValue, newPassword: password })
       });
       const data = await res.json();
       if (data.success) {
@@ -77,6 +83,31 @@ const Register = () => {
     setLoading(false);
   };
 
+  // Handle OTP input change
+  const handleOtpChange = (e, idx) => {
+    const value = e.target.value.replace(/\D/g, '');
+    if (!value) {
+      const newOtp = [...otp];
+      newOtp[idx] = '';
+      setOtp(newOtp);
+      return;
+    }
+    const newOtp = [...otp];
+    newOtp[idx] = value[0];
+    setOtp(newOtp);
+    // Move to next box if not last
+    if (value && idx < 5) {
+      otpRefs[idx + 1].current.focus();
+    }
+  };
+
+  // Handle backspace to move focus
+  const handleOtpKeyDown = (e, idx) => {
+    if (e.key === 'Backspace' && !otp[idx] && idx > 0) {
+      otpRefs[idx - 1].current.focus();
+    }
+  };
+
   return (
     <div className="register-container">
       <CSSTransition
@@ -90,45 +121,47 @@ const Register = () => {
           {/* Left Side - Welcome */}
           <div className="register-welcome">
             <h1>Welcome!</h1>
-            <p>Join our community and start your journey with us. Register to access exclusive features and connect with others!</p>
+            <p>
+              Register now to efficiently manage your fashion store. Gain access to exclusive inventory tools, sales analytics, and streamline your business operations with our professional platform.
+            </p>
           </div>
           {/* Right Side - Register Form */}
           <div className="register-form-side">
             <h2 className="register-form-title">Register</h2>
             {step === 1 && (
               <form onSubmit={handleSubmit} className="register-form">
-                <div style={{ marginBottom: '16px' }}>
-                  <label className="register-label">Name</label>
+                <div className="register-float-group">
                   <input
                     type="text"
-                    placeholder="Enter your name"
-                    className="register-input"
+                    className="register-input floating-input"
                     value={name}
                     onChange={e => setName(e.target.value)}
                     autoComplete="off"
+                    required
                   />
+                  <label className={`register-float-label${name ? ' filled' : ''}`}>Name</label>
                 </div>
-                <div style={{ marginBottom: '16px' }}>
-                  <label className="register-label">Email</label>
+                <div className="register-float-group">
                   <input
                     type="email"
-                    placeholder="Enter your email"
-                    className="register-input"
+                    className="register-input floating-input"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     autoComplete="off"
+                    required
                   />
+                  <label className={`register-float-label${email ? ' filled' : ''}`}>Email</label>
                 </div>
-                <div style={{ marginBottom: '24px' }}>
-                  <label className="register-label">Password</label>
+                <div className="register-float-group">
                   <input
                     type="password"
-                    placeholder="Enter your password"
-                    className="register-input"
+                    className="register-input floating-input"
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     autoComplete="off"
+                    required
                   />
+                  <label className={`register-float-label${password ? ' filled' : ''}`}>Password</label>
                 </div>
                 <button type="submit" className="register-btn" disabled={loading}>{loading ? "Sending..." : "Register & Verify Email"}</button>
                 {message && <div className="forgot-message">{message}</div>}
@@ -137,13 +170,22 @@ const Register = () => {
             {step === 2 && (
               <form onSubmit={handleVerifyOtp} className="register-form">
                 <label className="register-label">Enter OTP sent to your email</label>
-                <input
-                  type="text"
-                  className="register-input"
-                  value={otp}
-                  onChange={e => setOtp(e.target.value)}
-                  required
-                />
+                <div className="otp-input-group">
+                  {otp.map((digit, idx) => (
+                    <input
+                      key={idx}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={1}
+                      className="otp-input-box"
+                      value={digit}
+                      onChange={e => handleOtpChange(e, idx)}
+                      onKeyDown={e => handleOtpKeyDown(e, idx)}
+                      ref={otpRefs[idx]}
+                      autoFocus={idx === 0}
+                    />
+                  ))}
+                </div>
                 <button className="register-btn" type="submit" disabled={loading}>{loading ? "Verifying..." : "Verify OTP & Register"}</button>
                 {message && <div className="forgot-message">{message}</div>}
               </form>

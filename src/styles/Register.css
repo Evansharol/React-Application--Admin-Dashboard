@@ -1,3 +1,104 @@
+/* Floating label styles */
+.register-float-group {
+  position: relative;
+  margin-bottom: 22px;
+}
+.floating-input {
+  padding: 16px 12px 8px 12px;
+  font-size: 1rem;
+  background: #fff;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  width: 100%;
+  transition: border 0.2s;
+}
+.floating-input:focus {
+  border: 1.5px solid #1976d2;
+}
+/* Improved floating label above border */
+.register-float-label {
+  position: absolute;
+  left: 18px;
+  top: 16px;
+  color: #888;
+  font-size: 1rem;
+  background: transparent;
+  pointer-events: none;
+  transition: all 0.18s cubic-bezier(.4,0,.2,1);
+  z-index: 2;
+}
+.floating-input:focus + .register-float-label,
+.register-float-label.filled {
+  top: -14px;
+  left: 4px;
+  font-size: 0.92rem;
+  color: #1976d2;
+  background: #fff;
+  padding: 0 4px;
+  font-weight: 600;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  border-bottom: 2px solid #1976d2;
+}
+.register-float-group {
+  position: relative;
+  margin-bottom: 32px;
+  padding-top: 8px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+body, .register-container, .register-box, .register-welcome, .register-form-side, .register-form, .register-label, .register-input, .register-btn, .register-form-title, .register-social-btn, .register-account-link, .register-signin-link, .otp-input-box {
+  font-family: 'Poppins', Arial, Helvetica, sans-serif !important;
+}
+
+.register-welcome h1 {
+  font-family: 'Poppins', Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.register-form-title {
+  font-family: 'Poppins', Arial, Helvetica, sans-serif;
+  font-weight: 400;
+}
+
+.register-label {
+  font-family: 'Poppins', Arial, Helvetica, sans-serif;
+  font-weight: 600;
+}
+
+.register-btn, .register-social-btn {
+  font-family: 'Poppins', Arial, Helvetica, sans-serif;
+  font-weight: 600;
+}
+/* OTP input group */
+.otp-input-group {
+  display: flex;
+  justify-content: center;
+  font-family: 'Courier New', Courier, monospace;
+  gap: 10px;
+  margin: 18px 0 24px 0;
+}
+
+.otp-input-box {
+  width: 40px;
+  height: 48px;
+  font-size: 2rem;
+  text-align: center;
+  border: 1.5px solid #1976d2;
+  border-radius: 8px;
+  outline: none;
+  transition: border 0.2s;
+  background: #f7faff;
+  color: #1976d2;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.06);
+}
+.otp-input-box:focus {
+  border: 2px solid #0d47a1;
+  background: #e3f0ff;
+}
 .register-container {
   min-height: 100vh;
   width: 100vw;

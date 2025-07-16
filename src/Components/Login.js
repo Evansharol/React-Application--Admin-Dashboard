@@ -1,6 +1,85 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
+import Loader from './Loader';
+
+function VerifyForgotOtpForm({ email, otp, setOtp, newPassword, setNewPassword, setShowForgot, setForgotStep, setMessage, loading, setLoading, message }) {
+  const otpArr = Array.isArray(otp) ? otp : Array(6).fill('').map((_, i) => otp[i] || '');
+  const otpRefs = useRef(Array.from({ length: 6 }, () => React.createRef()));
+  const handleOtpChange = (e, idx) => {
+    const value = e.target.value.replace(/\D/g, '');
+    const newOtp = [...otpArr];
+    newOtp[idx] = value[0] || '';
+    setOtp(newOtp);
+    if (value && idx < 5) otpRefs.current[idx + 1].current.focus();
+  };
+  const handleOtpKeyDown = (e, idx) => {
+    if (e.key === 'Backspace' && !otpArr[idx] && idx > 0) otpRefs.current[idx - 1].current.focus();
+  };
+  const handleSubmit = async e => {
+    e.preventDefault();
+    const otpValue = otpArr.join('');
+    if (otpValue.length !== 6) {
+      setMessage('Please enter the 6-digit OTP.');
+      return;
+    }
+    setLoading(true);
+    setMessage('');
+    try {
+      const res = await fetch('http://localhost:3001/api/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, otp: otpValue, newPassword })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setShowForgot(false);
+        setForgotStep(1);
+        setMessage('');
+        alert('Password reset successful');
+      } else {
+        setMessage(data.error || 'Failed to reset password');
+      }
+    } catch (err) {
+      setMessage('Server error');
+    }
+    setLoading(false);
+  };
+  return (
+    <form onSubmit={handleSubmit}>
+      <h3>Verify OTP</h3>
+      <label className="login-label">Enter OTP</label>
+      <div className="otp-input-group">
+        {otpArr.map((digit, idx) => (
+          <input
+            key={idx}
+            type="text"
+            inputMode="numeric"
+            maxLength={1}
+            className="otp-input-box"
+            value={digit}
+            onChange={e => handleOtpChange(e, idx)}
+            onKeyDown={e => handleOtpKeyDown(e, idx)}
+            ref={otpRefs.current[idx]}
+            autoFocus={idx === 0}
+          />
+        ))}
+      </div>
+      <div className="login-float-group">
+        <input
+          type="password"
+          className="login-input floating-input"
+          value={newPassword}
+          onChange={e => setNewPassword(e.target.value)}
+          required
+        />
+        <label className={`login-float-label${newPassword ? ' filled' : ''}`}>New Password</label>
+      </div>
+      <button className="login-btn" type="submit" disabled={loading}>{loading ? 'Verifying...' : 'Reset Password'}</button>
+      {message && <div className="forgot-message">{message}</div>}
+    </form>
+  );
+}
 
 const Login = () => {
   const [user, setUser] = useState("");
@@ -12,6 +91,7 @@ const Login = () => {
   const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [showLoader, setShowLoader] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -35,38 +115,42 @@ const Login = () => {
       return;
     }
     setMessage("");
-    alert("Signed in successfully");
-    navigate("/home");
+    setShowLoader(true);
+    setTimeout(() => {
+      setShowLoader(false);
+      navigate("/home");
+    }, 1200);
   };
 
   return (
     <div className="login-container">
+      {showLoader && <Loader />}
       <div className="login-box">
         <div className="login-form-side">
           <h2 className="login-form-title">Login</h2>
           <form onSubmit={handleSubmit} className="login-form">
             {message && <div className="forgot-message">{message}</div>}
-            <div style={{ marginBottom: '16px' }}>
-              <label className="login-label">Username or Email</label>
+            <div className="login-float-group">
               <input
                 type="text"
-                placeholder="Enter your username or email"
-                className="login-input"
+                className="login-input floating-input"
                 value={user}
                 onChange={e => setUser(e.target.value)}
                 autoComplete="off"
+                required
               />
+              <label className={`login-float-label${user ? ' filled' : ''}`}>Username or Email</label>
             </div>
-            <div style={{ marginBottom: '8px' }}>
-              <label className="login-label">Password</label>
+            <div className="login-float-group">
               <input
                 type="password"
-                placeholder="Enter your password"
-                className="login-input"
+                className="login-input floating-input"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 autoComplete="off"
+                required
               />
+              <label className={`login-float-label${password ? ' filled' : ''}`}>Password</label>
             </div>
             <div className="login-forgot-link">
               <span tabIndex={0} role="button" onClick={() => setShowForgot(true)}>Forgot password?</span>
@@ -111,63 +195,34 @@ const Login = () => {
                 setLoading(false);
               }}>
                 <h3>Forgot Password</h3>
-                <label className="login-label">Enter your email</label>
-                <input
-                  type="email"
-                  className="login-input"
-                  value={forgotEmail}
-                  onChange={e => setForgotEmail(e.target.value)}
-                  required
-                />
+                <div className="login-float-group">
+                  <input
+                    type="email"
+                    className="login-input floating-input"
+                    value={forgotEmail}
+                    onChange={e => setForgotEmail(e.target.value)}
+                    required
+                  />
+                  <label className={`login-float-label${forgotEmail ? ' filled' : ''}`}>Email</label>
+                </div>
                 <button className="login-btn" type="submit" disabled={loading}>{loading ? "Sending..." : "Send OTP"}</button>
                 {message && <div className="forgot-message">{message}</div>}
               </form>
             )}
             {forgotStep === 2 && (
-              <form onSubmit={async e => {
-                e.preventDefault();
-                setLoading(true);
-                setMessage("");
-                try {
-                  const res = await fetch('http://localhost:3001/api/verify-otp', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: forgotEmail, otp, newPassword })
-                  });
-                  const data = await res.json();
-                  if (data.success) {
-                    setShowForgot(false);
-                    setForgotStep(1);
-                    setMessage("");
-                    alert("Password reset successful");
-                  } else {
-                    setMessage(data.error || 'Failed to reset password');
-                  }
-                } catch (err) {
-                  setMessage('Server error');
-                }
-                setLoading(false);
-              }}>
-                <h3>Verify OTP</h3>
-                <label className="login-label">Enter OTP</label>
-                <input
-                  type="text"
-                  className="login-input"
-                  value={otp}
-                  onChange={e => setOtp(e.target.value)}
-                  required
-                />
-                <label className="login-label">New Password</label>
-                <input
-                  type="password"
-                  className="login-input"
-                  value={newPassword}
-                  onChange={e => setNewPassword(e.target.value)}
-                  required
-                />
-                <button className="login-btn" type="submit" disabled={loading}>{loading ? "Verifying..." : "Reset Password"}</button>
-                {message && <div className="forgot-message">{message}</div>}
-              </form>
+              <VerifyForgotOtpForm
+                email={forgotEmail}
+                otp={otp}
+                setOtp={setOtp}
+                newPassword={newPassword}
+                setNewPassword={setNewPassword}
+                setShowForgot={setShowForgot}
+                setForgotStep={setForgotStep}
+                setMessage={setMessage}
+                loading={loading}
+                setLoading={setLoading}
+                message={message}
+              />
             )}
           </div>
         </div>

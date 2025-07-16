@@ -1,3 +1,84 @@
+@media (max-width: 1000px) {
+  .login-box {
+    width: 95vw;
+    min-width: unset;
+    flex-direction: column;
+    min-height: 600px;
+  }
+  .login-form-side, .login-welcome {
+    padding: 32px 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .login-box {
+    width: 100vw;
+    min-width: unset;
+    min-height: 100vh;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .login-form-side, .login-welcome {
+    padding: 18px 4vw;
+  }
+  .login-welcome h1 {
+    font-size: 1.3rem;
+  }
+  .login-form-title {
+    font-size: 1.2rem;
+  }
+  .login-btn {
+    font-size: 1rem;
+    padding: 10px 0;
+  }
+}
+.otp-input-box {
+  font-family: 'Poppins', Arial, Helvetica, sans-serif;
+  font-weight: 400;
+}
+/* Floating label styles for login */
+.login-float-group {
+  position: relative;
+  margin-bottom: 22px;
+}
+.floating-input {
+  padding: 16px 12px 8px 12px;
+  font-size: 1rem;
+  background: #fff;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  width: 100%;
+  transition: border 0.2s;
+}
+.floating-input:focus {
+  border: 1.5px solid #1976d2;
+}
+.login-float-label {
+  position: absolute;
+  left: 18px;
+  top: 16px;
+  color: #888;
+  font-size: 1rem;
+  background: transparent;
+  pointer-events: none;
+  transition: all 0.18s cubic-bezier(.4,0,.2,1);
+  z-index: 2;
+}
+.floating-input:focus + .login-float-label,
+.login-float-label.filled {
+  top: -14px;
+  left: 4px;
+  font-size: 0.92rem;
+  color: #1976d2;
+  background: #fff;
+  padding: 0 4px;
+  font-weight: 600;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  border-bottom: 2px solid #1976d2;
+}
 /* Forgot Password Modal Styles */
 .forgot-modal-bg {
   position: fixed;
