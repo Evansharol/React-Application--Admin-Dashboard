@@ -1,84 +1,71 @@
-/* Smaller UserProfile for Admin Dashboard Header */
-.admin-dashboard-header .user-profile {
-  padding: 4px 12px;
-  border-radius: 18px;
-  box-shadow: none;
-  background: #f7faff;
-  gap: 6px;
+.admin-dashboard {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
-.admin-dashboard-header .user-avatar {
-  width: 28px;
-  height: 28px;
-  font-size: 1.1rem;
-  margin-bottom: 0;
-  margin-right: 4px;
-}
-.admin-dashboard-header .user-name {
-  font-size: 0.98rem;
-  font-weight: 500;
-  color: #1976d2;
-  margin-top: 0;
-  margin-left: 2px;
-  text-align: left;
-}
-/* Admin Dashboard Header Content Layout */
-.admin-dashboard-header-content {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  justify-content: space-between;
-}
-
-.menu-icon {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 2rem;
-  color: #1976d2;
-  padding: 0 12px;
-  transition: color 0.18s;
-}
-.menu-icon:hover {
-  color: #0d47a1;
-}
-
-.admin-dashboard-container {
   min-height: 100vh;
-  background: linear-gradient(120deg, #f8fafc 0%, #e0c3fc 100%);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
+  background-color: #f5f5f5;
 }
-.admin-dashboard-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 70px;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.07);
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 48px;
-  z-index: 100;
-  box-sizing: border-box;
-}
-.admin-dashboard-main {
-  margin-top: 70px;
-  width: 100vw;
-  min-height: calc(100vh - 70px);
+
+.main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 32px 24px;
-  box-sizing: border-box;
-  overflow-x: auto;
+  margin-left: 250px; /* Adjust based on your sidebar width */
+  transition: margin-left 0.3s ease;
+}
+
+.dashboard-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  background-color: #ffffff;
+  margin: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-content h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #222;
+}
+
+.welcome-section {
+  text-align: center;
+  padding: 2rem 0;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 2rem;
+}
+
+.welcome-section h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.welcome-section p {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+  }
+  
+  .dashboard-content {
+    margin: 0.5rem;
+    padding: 1rem;
+  }
+  
+  .welcome-section h1 {
+    font-size: 2rem;
+  }
+}
+
+/* Smooth transitions for professional feel */
+.dashboard-content * {
+  transition: all 0.2s ease;
 }

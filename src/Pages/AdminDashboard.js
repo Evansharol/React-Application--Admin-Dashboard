@@ -1,28 +1,22 @@
 import React from 'react';
+import Sidebar from '../Components/Sidebar';
+import Header from '../Components/Header';
 import '../styles/AdminDashboard.css';
-import UserProfile from '../Components/UserProfile';
 
-const user = JSON.parse(localStorage.getItem('user')) || { name: 'Admin' };
-
-const AdminDashboard = () => {
-  return (
-    <div className="admin-dashboard-container">
-      <header className="admin-dashboard-header">
-        <div className="admin-dashboard-header-content">
-          <button className="menu-icon" aria-label="Menu">
-            <span role="img" aria-label="menu">☰</span>
-          </button>
-          <UserProfile user={user} />
+const AdminDashboard = () => (
+  <div className="admin-dashboard">
+    <Sidebar />
+    <div className="main-content">
+      <Header userName="Admin" />
+      <div className="dashboard-content">
+        <div className="welcome-section">
+          <h1>Welcome to Admin Dashboard</h1>
+          <p>Manage your application efficiently</p>
         </div>
-      </header>
-      {/* ...existing dashboard content... */}
-      <main className="admin-dashboard-main">
-        <h2>Admin Dashboard</h2>
-        {/* Add your dashboard widgets/components here */}
-      </main>
+        {/* Add more dashboard content sections here */}
+      </div>
     </div>
-  );
-};
+  </div>
+);
 
 export default AdminDashboard;
-
