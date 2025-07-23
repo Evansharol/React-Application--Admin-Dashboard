@@ -26,7 +26,7 @@ function VerifyForgotOtpForm({ email, otp, setOtp, newPassword, setNewPassword, 
     setLoading(true);
     setMessage('');
     try {
-      const res = await fetch('http://localhost:3001/api/verify-otp', {
+      const res = await fetch('http://localhost:5000/api/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp: otpValue, newPassword })
@@ -169,7 +169,7 @@ const Login = () => {
                 setLoading(true);
                 setMessage("");
                 try {
-                  const res = await fetch('http://localhost:3001/api/send-otp', {
+                  const res = await fetch('http://localhost:5000/api/send-otp', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: forgotEmail })

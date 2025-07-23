@@ -1,0 +1,77 @@
+[
+  {
+    "id": 4,
+    "name": "Rainbow Chard",
+    "category": "Fresh Vegetable",
+    "price": 7.07,
+    "salePrice": 7.07,
+    "stock": 472,
+    "description": "Colorful rainbow chard vegetables",
+    "status": "Selling",
+    "published": true,
+    "imageUrl": "https://images.unsplash.com/photo-1574316071802-0d684efa183d?w=400&h=400&fit=crop"
+  },
+  {
+    "id": 5,
+    "name": "Clementine",
+    "category": "Fresh Fruits",
+    "price": 48.12,
+    "salePrice": 48.12,
+    "stock": 451,
+    "description": "Sweet and juicy clementine oranges",
+    "status": "Selling",
+    "published": true,
+    "imageUrl": "https://images.unsplash.com/photo-1547514701-42782101795e?w=400&h=400&fit=crop"
+  },
+  {
+    "id": 6,
+    "name": "Kale Sprouts",
+    "category": "Fresh Vegetable",
+    "price": 106.06,
+    "salePrice": 90,
+    "stock": 299,
+    "description": "Fresh healthy kale sprouts",
+    "status": "Selling",
+    "published": true,
+    "imageUrl": "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?w=400&h=400&fit=crop"
+  },
+  {
+    "id": 7,
+    "name": "Rainbow Peppers",
+    "category": "Fresh Vegetable",
+    "price": 90.85,
+    "salePrice": 90.85,
+    "stock": 412,
+    "description": "Colorful mixed bell peppers",
+    "status": "Selling",
+    "published": true,
+    "imageUrl": "https://images.unsplash.com/photo-1525607551316-4a8e16d1f9ba?w=400&h=400&fit=crop"
+  },
+  {
+    "id": 8,
+    "name": "Jeans",
+    "category": "Clothing",
+    "price": 600,
+    "stock": 30,
+    "description": "comfy",
+    "createdAt": "2025-07-23T11:49:31.024Z",
+    "salePrice": 600,
+    "published": true,
+    "imageUrl": "/uploads/image-1753272394456-463006999.webp",
+    "updatedAt": "2025-07-23T12:06:34.523Z"
+  },
+  {
+    "id": 9,
+    "name": "earing",
+    "category": "Clothing",
+    "price": 60,
+    "stock": 100,
+    "description": "",
+    "createdAt": "2025-07-23T11:59:38.810Z",
+    "salePrice": 60,
+    "published": true,
+    "imageUrl": "/uploads/image-1753272407229-473394241.jpg",
+    "updatedAt": "2025-07-23T12:17:57.590Z",
+    "status": "Draft"
+  }
+]
