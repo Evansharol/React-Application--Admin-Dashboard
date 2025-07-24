@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { FaBell, FaBars, FaHome, FaBox, FaUsers, FaUserTie, FaCog, FaChartLine } from 'react-icons/fa';
 import UserProfile from '../Components/UserProfile';
 import Products from './Products';
+import Orders from './Orders';
+import Customers from './Customers';
+import Staff from './Staff';
+import Settings from './Settings';
 import '../styles/AdminDashboard.css';
 
 const AdminDashboard = () => {
@@ -13,7 +17,7 @@ const AdminDashboard = () => {
   const sidebarItems = [
     { icon: FaHome, label: 'Dashboard', active: activeMenu === 'Dashboard' },
     { icon: FaBox, label: 'Products', active: activeMenu === 'Products' },
-    { icon: FaChartLine, label: 'Sales', active: activeMenu === 'Sales' },
+    { icon: FaChartLine, label: 'Orders', active: activeMenu === 'Orders' },
     { icon: FaUsers, label: 'Customer', active: activeMenu === 'Customer' },
     { icon: FaUserTie, label: 'Staff', active: activeMenu === 'Staff' },
     { icon: FaCog, label: 'Setting', active: activeMenu === 'Setting' }
@@ -27,14 +31,14 @@ const AdminDashboard = () => {
     switch(activeMenu) {
       case 'Products':
         return <Products theme={theme} />;
-      case 'Sales':
-        return <div><h1>Sales Dashboard</h1><p>Sales analytics and reports coming soon...</p></div>;
+      case 'Orders':
+        return <Orders theme={theme} />;
       case 'Customer':
-        return <div><h1>Customer Management</h1><p>Customer management features coming soon...</p></div>;
+        return <Customers theme={theme} />;
       case 'Staff':
-        return <div><h1>Staff Management</h1><p>Staff management features coming soon...</p></div>;
+        return <Staff theme={theme} />;
       case 'Setting':
-        return <div><h1>Settings</h1><p>Settings panel coming soon...</p></div>;
+        return <Settings theme={theme} />;
       default:
         return (
           <div className="dashboard-content">

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { 
   FaPlus, 
-  FaEdit, 
   FaTrash, 
   FaSearch, 
   FaEye, 
   FaFileExport, 
   FaFileImport,
   FaFilter,
-  FaRedo
+  FaRedo,
+  FaPen
 } from 'react-icons/fa';
 import { productsAPI } from '../services/api';
 import '../styles/Products.css';
@@ -40,6 +40,8 @@ const Products = ({ theme = 'light' }) => {
 
   // State for controlling modal visibility
   const [showModal, setShowModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [viewingProduct, setViewingProduct] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   
@@ -50,6 +52,13 @@ const Products = ({ theme = 'light' }) => {
     category: '',
     priceRange: '',
     status: ''
+  });
+
+  // Notification states
+  const [notification, setNotification] = useState({
+    show: false,
+    message: '',
+    type: 'success' // 'success', 'error', 'info'
   });
 
   // Load products when component mounts
@@ -70,6 +79,24 @@ const Products = ({ theme = 'light' }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Show notification function
+  const showNotification = (message, type = 'success') => {
+    setNotification({
+      show: true,
+      message,
+      type
+    });
+    
+    // Auto hide notification after 6 seconds (ensuring plenty of time to read)
+    setTimeout(() => {
+      setNotification({
+        show: false,
+        message: '',
+        type: 'success'
+      });
+    }, 10000);
   };
 
   // Filter products based on search term and filters
@@ -258,6 +285,12 @@ const Products = ({ theme = 'light' }) => {
     setShowModal(true);
   };
 
+  // Handle view product details
+  const handleViewProduct = (product) => {
+    setViewingProduct(product);
+    setShowViewModal(true);
+  };
+
   // Save product (create or update)
   const handleSaveProduct = async () => {
     console.log('Save product triggered', { isEditing, selectedImage, formData });
@@ -348,8 +381,84 @@ const Products = ({ theme = 'light' }) => {
     }
   };
 
+  // Toggle product published status
+  const handleTogglePublished = async (productId) => {
+    // Prevent multiple rapid clicks
+    if (loading) return;
+    
+    try {
+      setLoading(true);
+      setError('');
+      
+      // Find the product to toggle
+      const productToUpdate = products.find(p => p.id === productId);
+      if (!productToUpdate) {
+        setError('Product not found');
+        showNotification('Product not found', 'error');
+        setLoading(false);
+        return;
+      }
+      
+      // Get the current published status (default to false if undefined)
+      const currentPublishedStatus = productToUpdate.published === true;
+      const newPublishedStatus = !currentPublishedStatus;
+      
+      console.log(`Toggling product ${productId} from ${currentPublishedStatus} to ${newPublishedStatus}`);
+      
+      // Create updated product data with toggled published status
+      const updatedProductData = {
+        ...productToUpdate,
+        published: newPublishedStatus,
+        updatedAt: new Date().toISOString()
+      };
+      
+      // Update product via API
+      const response = await productsAPI.update(productId, updatedProductData);
+      console.log('API response:', response);
+      
+      // Update local state with the new data
+      setProducts(prev => prev.map(product => 
+        product.id === productId 
+          ? { ...product, published: newPublishedStatus, updatedAt: new Date().toISOString() }
+          : product
+      ));
+
+      // Show notification based on the new state
+      if (newPublishedStatus) {
+        showNotification('Product Published Successfully!', 'success');
+      } else {
+        showNotification('Product Hidden Successfully!', 'success');
+      }
+      
+    } catch (error) {
+      console.error('Error toggling product published status:', error);
+      setError('Failed to update product status: ' + error.message);
+      showNotification('Failed to update product status', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={`products-page${theme === 'dark' ? ' dark-theme' : ''}`}>
+      {/* Notification */}
+      {notification.show && (
+        <div className={`notification notification-${notification.type}`}>
+          <div className="notification-content">
+            <div className="notification-icon">
+              ✓
+            </div>
+            <span className="notification-message">{notification.message}</span>
+            <button 
+              className="notification-close"
+              onClick={() => setNotification({...notification, show: false})}
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Centered Page Title */}
       <div className="page-title-container">
         <h1 className="page-title">Project Management</h1>
@@ -415,13 +524,11 @@ const Products = ({ theme = 'light' }) => {
             onChange={(e) => handleFilterChange('category', e.target.value)}
             className="filter-select"
           >
-            <option value="">Category</option>
+            <option value="">All</option>
             <option value="Men">Men</option>
-            <option value="Skin Care">Skin Care</option>
-            <option value="Fresh Vegetable">Fresh Vegetable</option>
-            <option value="Fresh Fruits">Fresh Fruits</option>
-            <option value="Clothing">Clothing</option>
-            <option value="Electronics">Electronics</option>
+            <option value="Women">Women</option>
+            <option value="Accessories">Accessories</option>
+            <option value="Footwear">Footwear</option>
           </select>
 
           <select 
@@ -522,7 +629,10 @@ const Products = ({ theme = 'light' }) => {
                     </span>
                   </td>
                   <td>
-                    <button className="view-btn">
+                    <button 
+                      className="view-btn"
+                      onClick={() => handleViewProduct(product)}
+                    >
                       <FaEye />
                     </button>
                   </td>
@@ -530,8 +640,9 @@ const Products = ({ theme = 'light' }) => {
                     <label className="toggle-switch">
                       <input 
                         type="checkbox" 
-                        checked={product.published !== false}
-                        onChange={() => {/* Toggle published status */}}
+                        checked={product.published === true}
+                        onChange={() => handleTogglePublished(product.id)}
+                        disabled={loading}
                       />
                       <span className="slider"></span>
                     </label>
@@ -542,8 +653,21 @@ const Products = ({ theme = 'light' }) => {
                         className="edit-btn"
                         onClick={() => handleEditProduct(product)}
                         disabled={loading}
+                        title="Edit Product"
+                        style={{
+                          background: '#3b82f6',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          width: '32px',
+                          height: '32px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer'
+                        }}
                       >
-                        <FaEdit />
+                        <FaPen style={{ color: 'white', fontSize: '14px' }} />
                       </button>
                       <button 
                         className="delete-btn"
@@ -643,11 +767,9 @@ const Products = ({ theme = 'light' }) => {
                 >
                   <option value="">Select category</option>
                   <option value="Men">Men</option>
-                  <option value="Skin Care">Skin Care</option>
-                  <option value="Fresh Vegetable">Fresh Vegetable</option>
-                  <option value="Fresh Fruits">Fresh Fruits</option>
-                  <option value="Clothing">Clothing</option>
-                  <option value="Electronics">Electronics</option>
+                  <option value="Women">Women</option>
+                  <option value="Accessories">Accessories</option>
+                  <option value="Footwear">Footwear</option>
                 </select>
               </div>
 
@@ -742,6 +864,106 @@ const Products = ({ theme = 'light' }) => {
               >
                 {loading ? 'Saving...' : isEditing ? 'Update' : 'Save'}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Product Details View Modal */}
+      {showViewModal && viewingProduct && (
+        <div className="modal-overlay">
+          <div className="modal product-details-modal">
+            <div className="modal-header">
+              <h2>Product Details</h2>
+              <button 
+                className="close-btn"
+                onClick={() => setShowViewModal(false)}
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="modal-body product-details-body">
+              <div className="product-details-container">
+                <div className="product-image-section">
+                  <div className="product-main-image">
+                    {viewingProduct.imageUrl ? (
+                      <img 
+                        src={viewingProduct.imageUrl.startsWith('http') ? viewingProduct.imageUrl : `http://localhost:5000${viewingProduct.imageUrl}`}
+                        alt={viewingProduct.name}
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <div className="product-fallback-icon" style={{ display: viewingProduct.imageUrl ? 'none' : 'flex' }}>
+                      {getProductIcon(viewingProduct.category)}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="product-info-section">
+                  <div className="product-status-badge">
+                    <span className="status-text">Status: </span>
+                    <span className={`status-indicator ${(viewingProduct.status || 'Selling').toLowerCase()}`}>
+                      {viewingProduct.status === 'Selling' ? 'This product Showing' : viewingProduct.status}
+                    </span>
+                  </div>
+
+                  <h1 className="product-title">{viewingProduct.name}</h1>
+                  
+                  <div className="product-sku">
+                    <span className="sku-label">SKU: </span>
+                    <span className="sku-value">{viewingProduct.id || 'N/A'}</span>
+                  </div>
+
+                  <div className="product-pricing">
+                    <span className="price-main">${viewingProduct.price}</span>
+                    {viewingProduct.salePrice && viewingProduct.salePrice !== viewingProduct.price && (
+                      <span className="price-sale">${viewingProduct.salePrice}</span>
+                    )}
+                  </div>
+
+                  <div className="product-stock-info">
+                    <span className={`stock-status ${parseInt(viewingProduct.stock) > 0 ? 'in-stock' : 'out-of-stock'}`}>
+                      {parseInt(viewingProduct.stock) > 0 ? 'In Stock' : 'Out of Stock'}
+                    </span>
+                    <span className="stock-quantity">QUANTITY: {viewingProduct.stock}</span>
+                  </div>
+
+                  {viewingProduct.description && (
+                    <div className="product-description">
+                      <p>{viewingProduct.description}</p>
+                    </div>
+                  )}
+
+                  <div className="product-meta">
+                    <div className="meta-item">
+                      <span className="meta-label">Category: </span>
+                      <span className="meta-value">{viewingProduct.category}</span>
+                    </div>
+                  </div>
+
+                  <div className="product-tags">
+                    <span className="tag">premium-shirt</span>
+                    <span className="tag">t-shirt</span>
+                    <span className="tag">new-t-shirt</span>
+                  </div>
+
+                  <div className="product-actions">
+                    <button 
+                      className="edit-product-btn"
+                      onClick={() => {
+                        setShowViewModal(false);
+                        handleEditProduct(viewingProduct);
+                      }}
+                    >
+                      Edit Product
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
