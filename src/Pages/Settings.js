@@ -25,7 +25,7 @@ import '../styles/Settings.css';
 const Settings = ({ theme }) => {
   // Get logged-in user data from localStorage
   const getLoggedInUser = () => {
-    const userData = localStorage.getItem('user');
+    const userData = localStorage.getItem('currentUser');
     if (userData) {
       const { name, email } = JSON.parse(userData);
       return { name: name || 'Admin', email: email || 'admin@stylesphere.com' };
@@ -71,7 +71,7 @@ const Settings = ({ theme }) => {
     accountCreated: '2025-01-01',
     profileCompleteness: 40, // Lower since we have less default data
     
-    profilePicture: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face'
+    profilePicture: '' // Start with empty to show initials by default
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -281,11 +281,35 @@ const Settings = ({ theme }) => {
           <div className="profile-summary">
             <div className="profile-avatar-section">
               <div className="profile-picture-container">
-                <img 
-                  src={imagePreview || adminData.profilePicture} 
-                  alt="Profile" 
-                  className="profile-picture"
-                />
+                {(imagePreview || adminData.profilePicture) ? (
+                  <img 
+                    src={imagePreview || adminData.profilePicture} 
+                    alt="Profile" 
+                    className="profile-picture"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
+                ) : null}
+                <div 
+                  className="profile-picture-fallback"
+                  style={{ 
+                    display: (imagePreview || adminData.profilePicture) ? 'none' : 'flex',
+                    width: '120px',
+                    height: '120px',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    color: 'white',
+                    fontSize: '48px',
+                    fontWeight: 'bold',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textTransform: 'uppercase'
+                  }}
+                >
+                  {adminData.name.charAt(0)}
+                </div>
                 {isEditing && (
                   <div className="picture-overlay">
                     <label htmlFor="profilePicture" className="change-picture-btn">

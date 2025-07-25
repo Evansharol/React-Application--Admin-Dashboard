@@ -8,10 +8,10 @@
     "stock": 48,
     "description": "",
     "status": "Selling",
-    "published": false,
+    "published": true,
     "imageUrl": "/uploads/image-1753352731073-788195641.jpeg",
     "createdAt": "2025-07-24T10:25:31.092Z",
-    "updatedAt": "2025-07-24T12:54:58.169Z"
+    "updatedAt": "2025-07-25T06:47:38.941Z"
   },
   {
     "id": 3,
@@ -25,7 +25,7 @@
     "published": true,
     "imageUrl": "/uploads/image-1753352759807-295059517.jpg",
     "createdAt": "2025-07-24T10:25:59.846Z",
-    "updatedAt": "2025-07-24T12:51:53.361Z"
+    "updatedAt": "2025-07-25T06:34:55.254Z"
   },
   {
     "id": 4,

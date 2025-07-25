@@ -424,13 +424,72 @@ input:checked + .toggle-slider:before {
 }
 
 .edit-btn {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  color: white;
+  background: #3b82f6 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 6px !important;
+  width: 36px !important;
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3) !important;
+  transition: all 0.2s ease !important;
+  padding: 8px !important;
+  font-size: 16px !important;
+  margin-right: 4px !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+.edit-btn svg {
+  width: 16px !important;
+  height: 16px !important;
+  color: white !important;
+  fill: white !important;
+  display: block !important;
+  stroke: white !important;
+  stroke-width: 2px !important;
 }
 
 .edit-btn:hover {
-  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-  transform: translateY(-1px);
+  background: #2563eb !important;
+  color: white !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+.edit-btn:hover svg {
+  color: white !important;
+  fill: white !important;
+  stroke: white !important;
+}
+
+/* Additional specificity for edit button in table actions */
+.staff-page .staff-table .action-buttons .edit-btn {
+  background: #3b82f6 !important;
+  color: white !important;
+  border: 2px solid #3b82f6 !important;
+  border-radius: 6px !important;
+  width: 36px !important;
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3) !important;
+  transition: all 0.2s ease !important;
+}
+
+.staff-page .staff-table .action-buttons .edit-btn svg {
+  color: white !important;
+  fill: white !important;
+  width: 16px !important;
+  height: 16px !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .delete-btn {

@@ -8,7 +8,7 @@ import {
   FaFileImport,
   FaFilter,
   FaRedo,
-  FaPen
+  FaEdit
 } from 'react-icons/fa';
 import { productsAPI } from '../services/api';
 import '../styles/Products.css';
@@ -54,13 +54,6 @@ const Products = ({ theme = 'light' }) => {
     status: ''
   });
 
-  // Notification states
-  const [notification, setNotification] = useState({
-    show: false,
-    message: '',
-    type: 'success' // 'success', 'error', 'info'
-  });
-
   // Load products when component mounts
   useEffect(() => {
     loadProducts();
@@ -79,24 +72,6 @@ const Products = ({ theme = 'light' }) => {
     } finally {
       setLoading(false);
     }
-  };
-
-  // Show notification function
-  const showNotification = (message, type = 'success') => {
-    setNotification({
-      show: true,
-      message,
-      type
-    });
-    
-    // Auto hide notification after 6 seconds (ensuring plenty of time to read)
-    setTimeout(() => {
-      setNotification({
-        show: false,
-        message: '',
-        type: 'success'
-      });
-    }, 10000);
   };
 
   // Filter products based on search term and filters
@@ -381,84 +356,8 @@ const Products = ({ theme = 'light' }) => {
     }
   };
 
-  // Toggle product published status
-  const handleTogglePublished = async (productId) => {
-    // Prevent multiple rapid clicks
-    if (loading) return;
-    
-    try {
-      setLoading(true);
-      setError('');
-      
-      // Find the product to toggle
-      const productToUpdate = products.find(p => p.id === productId);
-      if (!productToUpdate) {
-        setError('Product not found');
-        showNotification('Product not found', 'error');
-        setLoading(false);
-        return;
-      }
-      
-      // Get the current published status (default to false if undefined)
-      const currentPublishedStatus = productToUpdate.published === true;
-      const newPublishedStatus = !currentPublishedStatus;
-      
-      console.log(`Toggling product ${productId} from ${currentPublishedStatus} to ${newPublishedStatus}`);
-      
-      // Create updated product data with toggled published status
-      const updatedProductData = {
-        ...productToUpdate,
-        published: newPublishedStatus,
-        updatedAt: new Date().toISOString()
-      };
-      
-      // Update product via API
-      const response = await productsAPI.update(productId, updatedProductData);
-      console.log('API response:', response);
-      
-      // Update local state with the new data
-      setProducts(prev => prev.map(product => 
-        product.id === productId 
-          ? { ...product, published: newPublishedStatus, updatedAt: new Date().toISOString() }
-          : product
-      ));
-
-      // Show notification based on the new state
-      if (newPublishedStatus) {
-        showNotification('Product Published Successfully!', 'success');
-      } else {
-        showNotification('Product Hidden Successfully!', 'success');
-      }
-      
-    } catch (error) {
-      console.error('Error toggling product published status:', error);
-      setError('Failed to update product status: ' + error.message);
-      showNotification('Failed to update product status', 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className={`products-page${theme === 'dark' ? ' dark-theme' : ''}`}>
-      {/* Notification */}
-      {notification.show && (
-        <div className={`notification notification-${notification.type}`}>
-          <div className="notification-content">
-            <div className="notification-icon">
-              ✓
-            </div>
-            <span className="notification-message">{notification.message}</span>
-            <button 
-              className="notification-close"
-              onClick={() => setNotification({...notification, show: false})}
-            >
-              ×
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* Centered Page Title */}
       <div className="page-title-container">
         <h1 className="page-title">Project Management</h1>
@@ -578,14 +477,13 @@ const Products = ({ theme = 'light' }) => {
               <th>STOCK</th>
               <th>STATUS</th>
               <th>VIEW</th>
-              <th>PUBLISHED</th>
               <th>ACTIONS</th>
             </tr>
           </thead>
           <tbody>
             {filteredProducts.length === 0 ? (
               <tr>
-                <td colSpan="10" style={{ textAlign: 'center', padding: '40px' }}>
+                <td colSpan="9" style={{ textAlign: 'center', padding: '40px' }}>
                   {loading ? 'Loading...' : 'No products found'}
                 </td>
               </tr>
@@ -637,17 +535,6 @@ const Products = ({ theme = 'light' }) => {
                     </button>
                   </td>
                   <td>
-                    <label className="toggle-switch">
-                      <input 
-                        type="checkbox" 
-                        checked={product.published === true}
-                        onChange={() => handleTogglePublished(product.id)}
-                        disabled={loading}
-                      />
-                      <span className="slider"></span>
-                    </label>
-                  </td>
-                  <td>
                     <div className="action-buttons">
                       <button 
                         className="edit-btn"
@@ -655,19 +542,20 @@ const Products = ({ theme = 'light' }) => {
                         disabled={loading}
                         title="Edit Product"
                         style={{
-                          background: '#3b82f6',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '4px',
-                          width: '32px',
-                          height: '32px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          cursor: 'pointer'
+                          background: '#3b82f6 !important',
+                          color: 'white !important',
+                          border: 'none !important',
+                          borderRadius: '6px !important',
+                          width: '36px !important',
+                          height: '36px !important',
+                          display: 'flex !important',
+                          alignItems: 'center !important',
+                          justifyContent: 'center !important',
+                          cursor: 'pointer !important',
+                          boxShadow: '0 2px 4px rgba(59, 130, 246, 0.3) !important'
                         }}
                       >
-                        <FaPen style={{ color: 'white', fontSize: '14px' }} />
+                        <FaEdit style={{ color: 'white !important', fontSize: '16px !important' }} />
                       </button>
                       <button 
                         className="delete-btn"

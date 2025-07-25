@@ -250,3 +250,27 @@
 .dashboard-content * {
   transition: all 0.2s ease;
 }
+
+/* Logout button specific styling */
+.logout-item {
+  color: #e74c3c !important;
+  margin-top: auto;
+}
+
+.logout-item:hover {
+  background: #e74c3c !important;
+  color: white !important;
+  border-left-color: #c0392b !important;
+}
+
+.logout-item .sidebar-icon {
+  color: inherit;
+}
+
+/* Ensure sidebar nav uses flexbox to push logout to bottom */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 80px);
+  padding: 20px 0;
+}

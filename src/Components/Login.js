@@ -108,6 +108,13 @@ const Login = () => {
     }
     setMessage("");
     setShowLoader(true);
+    
+    // Store current logged-in user info separately
+    localStorage.setItem('currentUser', JSON.stringify({
+      name: regUser.name,
+      email: regUser.email
+    }));
+    
     setTimeout(() => {
       setShowLoader(false);
       navigate("/home");

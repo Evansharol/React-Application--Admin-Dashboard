@@ -173,8 +173,21 @@ const Customers = ({ theme }) => {
                         className="action-btn edit-btn" 
                         title="Edit Customer"
                         onClick={() => handleEditCustomer(customer)}
+                        style={{
+                          background: '#3b82f6 !important',
+                          color: 'white !important',
+                          border: 'none !important',
+                          borderRadius: '6px !important',
+                          width: '36px !important',
+                          height: '36px !important',
+                          display: 'flex !important',
+                          alignItems: 'center !important',
+                          justifyContent: 'center !important',
+                          cursor: 'pointer !important',
+                          boxShadow: '0 2px 4px rgba(59, 130, 246, 0.3) !important'
+                        }}
                       >
-                        <FaEdit />
+                        <FaEdit style={{ color: 'white !important', fontSize: '16px !important' }} />
                       </button>
                       <button 
                         className="action-btn delete-btn" 
